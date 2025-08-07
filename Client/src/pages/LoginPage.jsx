@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import assets from "../assets/assets";
+import { useContext } from "react";
+import { AuthCOntext } from "../../context/AuthContext";
 
 const LoginPage = () => {
   const [Currstate, setCurrstate] = useState("Sign Up");
@@ -8,6 +10,8 @@ const LoginPage = () => {
   const [Password, setPassword] = useState("");
   const [Bio, setBio] = useState("");
   const [IsDataSubmitted, setIsDataSubmitted] = useState(false);
+
+  const { login } = useContext(AuthCOntext);
   function Handlesubmit(e) {
     e.preventDefault();
     if (Currstate === "Sign Up") {
@@ -16,6 +20,12 @@ const LoginPage = () => {
       // Handle login logic here
       console.log("Logging in with", { Email, Password });
     }
+    login(Currstate === "Sign Up" ? "signup" : "login", {
+      Fullname,
+      Email,
+      Password,
+      Bio,
+    });
   }
   return (
     <div className="min-h-screen bg-cover bg-center flex items-center justify-center gap-8 sm:justify-evenly max-sm:flex-col backdrop-blur-2xl">

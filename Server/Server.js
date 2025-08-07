@@ -2,11 +2,11 @@ import express from "express";
 import "dotenv/config";
 import cors from "cors";
 import http from "http";
-import UserRouter from "./Routes/userRoutes.js";
-import messageRouter from "./Routes/messageroutes.js";
+
 import { connectDB } from "./lib/db.js";
 import { Server } from "socket.io";
-
+import UserRouter from "./Routes/userRoutes.js";
+// import messageRouter from "./Routes/messageroutes.js";
 // create express app and http server
 const app = express();
 
@@ -55,7 +55,7 @@ io.on("connection", (socket) => {
 // Routes setup
 app.use("/api/status", (req, res) => res.send("Server is running"));
 app.use("/api/auth", UserRouter);
-app.use("/api/messages", messageRouter);
+// app.use("/api/message", messageRouter);
 
 // Import and connect to the database
 await connectDB();
