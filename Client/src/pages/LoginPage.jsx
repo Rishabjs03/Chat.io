@@ -11,22 +11,23 @@ const LoginPage = () => {
   const [Bio, setBio] = useState("");
   const [IsDataSubmitted, setIsDataSubmitted] = useState(false);
 
-  const { Signup } = useContext(AuthCOntext);
+  const { authHandler } = useContext(AuthCOntext); // typo fix: 'COntext' → 'Context'
+
   function Handlesubmit(e) {
     e.preventDefault();
+
+    const credentials =
+      Currstate === "Sign Up"
+        ? { fullname: Fullname, email: Email, password, bio: Bio }
+        : { email: Email, password };
+
+    authHandler(Currstate, credentials); // Capitalized "Sign Up" or "Login"
+
     if (Currstate === "Sign Up") {
       setIsDataSubmitted(true);
-    } else {
-      // Handle login logic here
-      console.log("Logging in with", { Email, password });
     }
-    Signup(Currstate === "Sign Up" ? "signup" : "login", {
-      fullname: Fullname,
-      email: Email,
-      password,
-      bio: Bio,
-    });
   }
+
   return (
     <div className="min-h-screen bg-cover bg-center flex items-center justify-center gap-8 sm:justify-evenly max-sm:flex-col backdrop-blur-2xl">
       <img src={assets.logo_big} alt="" className="w-[min(30vw,250px)]" />
