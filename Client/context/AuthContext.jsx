@@ -61,8 +61,8 @@ export const AuthProvider = ({ children }) => {
       console.log("API Response:", data); // Debug the response
 
       if (data.success) {
-        setAuthUser(data.user);
-        connectSocket(data.user);
+        setAuthUser(data.userData);
+        connectSocket(data.userData);
 
         axios.defaults.headers.common["token"] = data.token;
         localStorage.setItem("token", data.token);
