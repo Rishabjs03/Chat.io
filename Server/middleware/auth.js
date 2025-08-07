@@ -11,6 +11,13 @@ export const protectroute = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded || !decoded.id) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid token",
+      });
+    }
+
     const user = await User.findById(decoded.id).select("-password");
 
     if (!user) {

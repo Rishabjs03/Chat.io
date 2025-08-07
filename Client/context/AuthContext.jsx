@@ -27,9 +27,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
   //   login function to handle user login and socket connection
-  const login = async (state, crendentials) => {
+  const Signup = async (state, crendentials) => {
     try {
-      const { data } = await axios.post(`/api/auth/login`, crendentials);
+      const { data } = await axios.post(`/api/auth/signup`, crendentials);
       if (data.success) {
         setAuthUser(data.user);
         connectSocket(data.user);
@@ -90,7 +90,7 @@ export const AuthProvider = ({ children }) => {
     AuthUser,
     OnlineUser,
     Socket,
-    login,
+    Signup,
     logout,
     updateProfile,
   };

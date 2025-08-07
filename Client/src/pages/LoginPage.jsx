@@ -11,16 +11,16 @@ const LoginPage = () => {
   const [Bio, setBio] = useState("");
   const [IsDataSubmitted, setIsDataSubmitted] = useState(false);
 
-  const { login } = useContext(AuthCOntext);
+  const { Signup } = useContext(AuthCOntext);
   function Handlesubmit(e) {
     e.preventDefault();
     if (Currstate === "Sign Up") {
       setIsDataSubmitted(true);
     } else {
       // Handle login logic here
-      console.log("Logging in with", { Email, Password });
+      console.log("Logging in with", { Email, password });
     }
-    login(Currstate === "Sign Up" ? "signup" : "login", {
+    Signup(Currstate === "Sign Up" ? "signup" : "login", {
       fullname: Fullname,
       email: Email,
       password,

@@ -25,7 +25,7 @@ export const signup = async (req, res) => {
       fullname,
       email,
       password: hashedpassword,
-      profilepic,
+      profilePic: profilepic || "",
       bio,
     });
     const token = generateToken(newUser._id);
@@ -47,7 +47,24 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    // Validate input
+    if (!email || !password) {
+      return res.json({
+        success: false,
+        message: "Email and password are required",
+      });
+    }
+
+    // Check if user exists
     const userData = await User.findOne({ email });
+    if (!userData) {
+      return res.json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
     const ispasswordValid = await bcrypt.compare(password, userData.password);
 
     if (!ispasswordValid) {
@@ -64,7 +81,7 @@ export const login = async (req, res) => {
       message: "Login successfully",
     });
   } catch (error) {
-    console.log(error.message);
+    console.log("Login error:", error.message);
     res.json({
       success: false,
       message: error.message,
