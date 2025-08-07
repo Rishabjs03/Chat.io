@@ -7,7 +7,7 @@ const LoginPage = () => {
   const [Currstate, setCurrstate] = useState("Sign Up");
   const [Fullname, setFullname] = useState("");
   const [Email, setEmail] = useState("");
-  const [Password, setPassword] = useState("");
+  const [password, setPassword] = useState("");
   const [Bio, setBio] = useState("");
   const [IsDataSubmitted, setIsDataSubmitted] = useState(false);
 
@@ -21,10 +21,10 @@ const LoginPage = () => {
       console.log("Logging in with", { Email, Password });
     }
     login(Currstate === "Sign Up" ? "signup" : "login", {
-      Fullname,
-      Email,
-      Password,
-      Bio,
+      fullname: Fullname,
+      email: Email,
+      password,
+      bio: Bio,
     });
   }
   return (
@@ -73,7 +73,7 @@ const LoginPage = () => {
               className="p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-500/10 text-white"
               placeholder="Password"
               required
-              value={Password}
+              value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </>

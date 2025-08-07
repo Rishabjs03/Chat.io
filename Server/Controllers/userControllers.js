@@ -7,6 +7,7 @@ import cloudinary from "../lib/cloudinary.js";
 // signup function to register a new user
 export const signup = async (req, res) => {
   const { email, fullname, password, profilepic, bio } = req.body;
+
   try {
     if (!email || !fullname || !password || !bio) {
       return res.json({ success: false, message: "Missing required fields" });
@@ -20,7 +21,7 @@ export const signup = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedpassword = await bcrypt.hash(password, salt);
 
-    const newUser = new User.create({
+    const newUser = await User.create({
       fullname,
       email,
       password: hashedpassword,
