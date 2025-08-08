@@ -20,16 +20,39 @@ export const AuthProvider = ({ children }) => {
   const connectSocket = (userData) => {
     if (!userData || socket?.connected) return;
 
+    // Disconnect existing socket if any
+    if (socket) {
+      socket.disconnect();
+      setSocket(null);
+    }
+
     const newSocket = io(backendUrl, {
       query: { userId: userData._id },
+      transports: ['websocket', 'polling'],
+      reconnection: true,
+      reconnectionAttempts: 10,
+      reconnectionDelay: 2000,
+      timeout: 20000,
+      forceNew: true,
     });
 
-    newSocket.connect();
-    setSocket(newSocket);
+    newSocket.on("connect", () => {
+      console.log("Socket connected successfully");
+    });
+
+    newSocket.on("connect_error", (error) => {
+      console.error("Socket connection error:", error);
+    });
+
+    newSocket.on("disconnect", (reason) => {
+      console.log("Socket disconnected:", reason);
+    });
 
     newSocket.on("onlineUsers", (userIds) => {
       setOnlineUser(userIds);
     });
+
+    setSocket(newSocket);
   };
 
   // ✅ Check if already logged in
@@ -96,7 +119,7 @@ export const AuthProvider = ({ children }) => {
       setSocket(null);
     }
 
-    navigate("/auth");
+    navigate("/login");
   };
 
   // ✅ Update Profile
