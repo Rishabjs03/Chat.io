@@ -15,6 +15,7 @@ const ChatContainer = () => {
     if (Input.trim() === "") return null;
     await sendMessage({ text: Input.trim() });
     setInput("");
+    console.log(messages);
   };
   const handlesendImage = async (e) => {
     const file = e.target.files[0];
@@ -72,7 +73,7 @@ const ChatContainer = () => {
           .map((msg, id) => (
             <div
               key={id}
-              className={`flex items-end gap-2 justify-end ${
+              className={`flex items-end gap-2   justify-end ${
                 msg.senderId !== authUser._id && "flex-row-reverse"
               }`}
             >

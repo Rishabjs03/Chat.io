@@ -1,6 +1,7 @@
 import Message from "../Models/Message.js";
-import User from "../Models/User.js"; // Add this import if not already present
+import User from "../Models/User.js";
 import { io, UserSocketMap } from "../Models/Socket.js";
+import cloudinary from "../lib/cloudinary.js";
 
 export const getuserforsidebar = async (req, res) => {
   try {
@@ -11,11 +12,11 @@ export const getuserforsidebar = async (req, res) => {
 
     const unseenMessagesCount = {};
     const promises = fliteredusers.map(async (user) => {
-      const messages = await Message.find({
-        SenderId: userId, // Note: You used SenderId, but later senderId. Standardize casing.
-        ReceiverId: user._id,
-        seen: false,
-      });
+          const messages = await Message.find({
+      senderId: userId,
+      receiverId: user._id,
+      seen: false,
+    });
       if (messages.length > 0) {
         unseenMessagesCount[user._id] = messages.length;
       }
@@ -100,8 +101,8 @@ export const sendMessage = async (req, res) => {
     }
     res.json({
       success: true,
-      message: newMessage,
-      message: "Message sent successfully", // Note: Duplicate 'message' key. Consider fixing.
+      newMessage: newMessage,
+      message: "Message sent successfully",
     });
   } catch (error) {
     console.log(error.message);
