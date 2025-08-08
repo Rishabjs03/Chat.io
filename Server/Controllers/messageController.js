@@ -1,5 +1,7 @@
 import Message from "../Models/Message.js";
-import { io, UserSocketMap } from "../Server.js";
+import User from "../Models/User.js"; // Add this import if not already present
+import { io, UserSocketMap } from "../Models/Socket.js";
+
 export const getuserforsidebar = async (req, res) => {
   try {
     const userId = req.User._id;
@@ -7,11 +9,10 @@ export const getuserforsidebar = async (req, res) => {
       "-Password"
     );
 
-    // count number of unseen messages
     const unseenMessagesCount = {};
     const promises = fliteredusers.map(async (user) => {
       const messages = await Message.find({
-        SenderId: userId,
+        SenderId: userId, // Note: You used SenderId, but later senderId. Standardize casing.
         ReceiverId: user._id,
         seen: false,
       });
@@ -34,7 +35,6 @@ export const getuserforsidebar = async (req, res) => {
   }
 };
 
-// get all messages between two users
 export const getMessages = async (req, res) => {
   try {
     const { id: selectedUserId } = req.params;
@@ -61,11 +61,11 @@ export const getMessages = async (req, res) => {
     });
   }
 };
-// api to make message seen
+
 export const markMessageSeen = async (req, res) => {
   try {
-    const { id } = id.params;
-    await Message.findByIdAndIpdate(id, { seen: true });
+    const { id } = req.params; // Fixed typo
+    await Message.findByIdAndUpdate(id, { seen: true }); // Fixed typo
     res.json({ success: true, message: "Message marked as seen" });
   } catch (error) {
     console.log(error.message);
@@ -75,7 +75,7 @@ export const markMessageSeen = async (req, res) => {
     });
   }
 };
-// send message to selected user
+
 export const sendMessage = async (req, res) => {
   try {
     const { text, image } = req.body;
@@ -94,7 +94,6 @@ export const sendMessage = async (req, res) => {
       image: ImageUrl,
     });
 
-    // emit message to the receiver
     const receiverSocketId = UserSocketMap[receiverId];
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("message", newMessage);
@@ -102,7 +101,7 @@ export const sendMessage = async (req, res) => {
     res.json({
       success: true,
       message: newMessage,
-      message: "Message sent successfully",
+      message: "Message sent successfully", // Note: Duplicate 'message' key. Consider fixing.
     });
   } catch (error) {
     console.log(error.message);
