@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import assets from "../assets/assets";
 import { useContext } from "react";
 import { AuthCOntext } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [Currstate, setCurrstate] = useState("Sign Up");
@@ -11,6 +12,7 @@ const LoginPage = () => {
   const [Bio, setBio] = useState("");
   const [IsDataSubmitted, setIsDataSubmitted] = useState(false);
 
+  const navigate = useNavigate();
   const { authHandler } = useContext(AuthCOntext); // typo fix: 'COntext' → 'Context'
 
   function Handlesubmit(e) {
