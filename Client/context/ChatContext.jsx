@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
+import toast from "react-hot-toast";
 
 export const ChatContext = createContext();
 export const ChatProvider = ({ children }) => {
@@ -23,7 +24,7 @@ export const ChatProvider = ({ children }) => {
     }
   };
   //   function to get message for selected user
-  const getMessage = async () => {
+  const getMessage = async (userId) => {
     try {
       const { data } = await axios.get(`/api/message/${userId}`);
       if (data.success) {
@@ -34,7 +35,7 @@ export const ChatProvider = ({ children }) => {
     }
   };
   //   function to send message to selected user
-  const sendMessage = async () => {
+  const sendMessage = async (messageData) => {
     try {
       const { data } = await axios.post(
         `/api/message/send/${selectedUser._id}`,
@@ -44,9 +45,11 @@ export const ChatProvider = ({ children }) => {
         setMessages((prevMessages) => [...prevMessages, data.newMessage]);
       } else {
         toast.error(data.message);
+        console.log(data.newMessage);
       }
     } catch (error) {
       toast.error(error.message);
+      console.log(error.message);
     }
   };
   //   function to subscribe to messages for selected user
