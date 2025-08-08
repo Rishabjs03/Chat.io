@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 import cloudinary from "../lib/cloudinary.js";
 // signup function to register a new user
 export const signup = async (req, res) => {
-  const { email, fullname, password, profilepic, bio } = req.body;
+  const { email, fullname, password, profilePic, bio } = req.body;
 
   try {
     if (!email || !fullname || !password || !bio) {
@@ -25,7 +25,7 @@ export const signup = async (req, res) => {
       fullname,
       email,
       password: hashedpassword,
-      profilePic: profilepic || "",
+      profilePic: profilePic || "",
       bio,
     });
     const token = generateToken(newUser._id);
@@ -98,22 +98,22 @@ export const isAuthenticated = async (req, res) => {
 // controller to update user profile details
 export const updateProfile = async (req, res) => {
   try {
-    const { fullname, bio, profilepic } = req.body;
+    const { fullname, bio, profilePic } = req.body;
     let userId = req.User._id;
     let updatedUser;
-    if (!profilepic) {
+    if (!profilePic) {
       updatedUser = await User.findByIdAndUpdate(
         userId,
         { fullname, bio },
         { new: true }
       );
     } else {
-      const uploadedImage = await cloudinary.uploader.upload(profilepic, {
+      const uploadedImage = await cloudinary.uploader.upload(profilePic, {
         folder: "chat-app",
       });
       updatedUser = await User.findByIdAndUpdate(
         userId,
-        { fullname, bio, profilepic: uploadedImage.secure_url },
+        { fullname, bio, profilePic: uploadedImage.secure_url },
         { new: true }
       );
     }

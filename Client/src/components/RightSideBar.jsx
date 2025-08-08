@@ -1,10 +1,10 @@
 import React from "react";
 import assets, { imagesDummyData } from "../assets/assets";
 import { useContext } from "react";
-import { AuthCOntext } from "../../context/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
 
 const RightSideBar = ({ SelectedUser }) => {
-  const { logout } = useContext(AuthCOntext);
+  const { logout } = useContext(AuthContext);
   return (
     SelectedUser && (
       <div

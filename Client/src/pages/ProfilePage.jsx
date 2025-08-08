@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import assets from "../assets/assets";
 import { useContext } from "react";
-import { AuthCOntext } from "../../context/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
 
 const ProfilePage = () => {
-  const { authUser, updateProfile } = useContext(AuthCOntext);
+  const { authUser, updateProfile } = useContext(AuthContext);
 
   const [SelectedImg, setSelectedImg] = useState(null);
   const navigate = useNavigate();

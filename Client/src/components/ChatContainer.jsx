@@ -1,28 +1,60 @@
-import React, { useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import assets, { messagesDummyData } from "../assets/assets";
 import { formatMessageTime } from "../libs/utils";
+import { ChatContext } from "../../context/ChatContext";
+import { AuthContext } from "../../context/AuthContext";
 
-const ChatContainer = ({ SelectedUser, setSelectedUser }) => {
+const ChatContainer = () => {
+  const { messages, selectedUser, setselectedUser, sendMessage, getMessage } =
+    useContext(ChatContext);
+  const { authUser, onlineUser } = useContext(AuthContext);
   const scrollEnd = useRef();
+  const [Input, setInput] = useState("");
+  const handlesendmessage = async (e) => {
+    e.preventDefault();
+    if (Input.trim() === "") return null;
+    await sendMessage({ text: Input.trim() });
+    setInput("");
+  };
+  const handlesendImage = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !file.type.startsWith("image/")) {
+      toast.error("Select a image please!");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      await sendMessage({
+        image: reader.result,
+      });
+      e.target.value = "";
+    };
+  };
   useEffect(() => {
-    if (scrollEnd.current) {
+    if (selectedUser) {
+      getMessage(selectedUser._id);
+    }
+  }, [selectedUser]);
+  useEffect(() => {
+    if (scrollEnd.current && messages) {
       scrollEnd.current.scrollIntoView({ behavior: "smooth" });
     }
-  });
-  return SelectedUser ? (
+  }, [messages]);
+  return selectedUser ? (
     <div className="h-full overflow-scroll relative backdrop-blur-lg">
       <div className="flex items-center gap-3 py-3 mx-4 border-b border-stone-500">
         <img
-          src={assets.profile_martin}
+          src={selectedUser.profilePic || assets.avatar_icon}
           alt="User"
           className="w-8 rounded-full"
         />
         <p className="flex-1 text-lg text-white flex items-center gap-2">
-          Martin Johnson
+          {selectedUser.fullname}
+          {onlineUser.includes(selectedUser._id)}
           <span className="w-2 h-2 rounded-full bg-green-500"></span>
         </p>
         <img
-          onClick={() => setSelectedUser(null)}
+          onClick={() => setselectedUser(null)}
           src={assets.arrow_icon}
           alt="Back"
           className="md:hidden max-w-7 cursor-pointer"
@@ -35,11 +67,11 @@ const ChatContainer = ({ SelectedUser, setSelectedUser }) => {
       </div>
 
       <div className="flex flex-col h-[calc(100%-120px)] overflow-y-scroll p-3 pb-6">
-        {messagesDummyData.map((msg, id) => (
+        {messages.map((msg, id) => (
           <div
             key={id}
             className={`flex items-end gap-2 justify-end ${
-              msg.senderId !== "680f5116f10f3cd28382ed02" && "flex-row-reverse"
+              msg.senderId !== authUser._id && "flex-row-reverse"
             }`}
           >
             {msg.image ? (
@@ -51,7 +83,7 @@ const ChatContainer = ({ SelectedUser, setSelectedUser }) => {
             ) : (
               <p
                 className={`p-2 max-w-[200px] md:text-sm font-light rounded-lg mb-8 break-all bg-violet-500/30 text-white ${
-                  msg.senderId !== "680f5116f10f3cd28382ed02"
+                  msg.senderId !== authUser._id
                     ? "rounded-br-none"
                     : "rounded-bl-none"
                 }`}
@@ -63,9 +95,9 @@ const ChatContainer = ({ SelectedUser, setSelectedUser }) => {
             <div className="text-center text-xs">
               <img
                 src={
-                  msg.senderId !== "680f5116f10f3cd28382ed02"
-                    ? assets.avatar_icon
-                    : assets.profile_martin
+                  msg.senderId !== authUser._id
+                    ? authUser?.profilePic || assets.avatar_icon
+                    : selectedUser?.profilePic || assets.avatar_icon
                 }
                 alt="Avatar"
                 className="w-7 rounded-full"
@@ -81,12 +113,21 @@ const ChatContainer = ({ SelectedUser, setSelectedUser }) => {
       <div className="absolute bottom-0 left-0 right-0 flex items-center gap-3 p-3">
         <div className="flex-1 flex items-center bg-gray-100/10 px-3 rounded-full">
           <input
+            onChange={(e) => setInput(e.target.value)}
+            value={Input}
+            onKeyDown={(e) => (e.key === "Enter" ? handlesendmessage(e) : null)}
             type="text"
             placeholder="Send Your Message"
             className="flex-1 text-sm p-3 bg-transparent border-none outline-none text-white placeholder-gray-400"
           />
 
-          <input type="file" id="image" accept="image/png,image/jpeg" hidden />
+          <input
+            onChange={handlesendImage}
+            type="file"
+            id="image"
+            accept="image/png,image/jpeg"
+            hidden
+          />
 
           <label htmlFor="image">
             <img
@@ -98,6 +139,7 @@ const ChatContainer = ({ SelectedUser, setSelectedUser }) => {
         </div>
 
         <img
+          onClick={handlesendmessage}
           src={assets.send_button}
           alt="Send"
           className="w-7 cursor-pointer"

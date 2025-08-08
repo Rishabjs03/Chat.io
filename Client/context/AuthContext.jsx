@@ -7,7 +7,7 @@ import { io } from "socket.io-client";
 const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 axios.defaults.baseURL = backendUrl;
 
-export const AuthCOntext = createContext();
+export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token") || null);
@@ -130,5 +130,5 @@ export const AuthProvider = ({ children }) => {
     updateProfile,
   };
 
-  return <AuthCOntext.Provider value={value}>{children}</AuthCOntext.Provider>;
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

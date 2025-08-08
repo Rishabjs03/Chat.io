@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import assets from "../assets/assets";
 import { useContext } from "react";
-import { AuthCOntext } from "../../context/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
@@ -13,7 +13,7 @@ const LoginPage = () => {
   const [IsDataSubmitted, setIsDataSubmitted] = useState(false);
 
   const navigate = useNavigate();
-  const { authHandler } = useContext(AuthCOntext); // typo fix: 'COntext' → 'Context'
+  const { authHandler } = useContext(AuthContext); // typo fix: 'COntext' → 'Context'
 
   function Handlesubmit(e) {
     e.preventDefault();
