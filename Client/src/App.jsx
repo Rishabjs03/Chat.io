@@ -17,10 +17,10 @@ const App = () => {
           path="/"
           element={authUser ? <HomePage /> : <Navigate to="/login" />}
         />
-        <Route
+        {/* <Route
           path="/signup"
-          element={authUser ? <Navigate to="/signup" /> : <Navigate to="/" />}
-        />
+          element={!authUser ? <HomePage /> : <Navigate to="/signup" />}
+        /> */}
         <Route
           path="/login"
           element={!authUser ? <LoginPage /> : <Navigate to="/" />}
